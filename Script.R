@@ -1,5 +1,8 @@
 # Load necessary libraries
+##C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/agricultural_data.csv
+
 #"C:/Users/salva/Documents/FinalProjectStatisticMasterDegree/set00.csv"
+#C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/set00.csv"
 # Load the necessary libraries
 library(data.table)
 library(dplyr)
@@ -8,7 +11,7 @@ library(readr)
 library(tidyr) # Make sure tidyr is loaded for drop_na
 
 # Load the data
-data <- fread("C:/Users/salva/Documents/FinalProjectStatisticMasterDegree/set00.csv", sep = ";", stringsAsFactors = FALSE)
+data <- fread("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/set00.csv", sep = ";", stringsAsFactors = FALSE)
 
 # Print column names to check the actual names
 print(names(data))
