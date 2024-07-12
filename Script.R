@@ -1,125 +1,148 @@
 # Load necessary libraries
 ##C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/agricultural_data.csv
-
-#"C:/Users/salva/Documents/FinalProjectStatisticMasterDegree/set00.csv"
-#C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/set00.csv"
-# Load the necessary libraries
-library(data.table)
+# Load necessary libraries
 library(dplyr)
 library(ggplot2)
 library(readr)
-library(tidyr) # Make sure tidyr is loaded for drop_na
 
 # Load the data
-data <- fread("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/set00.csv", sep = ";", stringsAsFactors = FALSE)
+data <- read.csv("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/agricultural_data.csv", sep = ";")
 
-# Print column names to check the actual names
-print(names(data))
+# Inspect the data structure
+print("Estructura de los datos:")
+print(str(data))
 
-# Replace spaces with underscores in column names
-setnames(data, old = names(data), new = gsub(" ", "_", names(data)))
-
-# Data Cleaning and Preparation
-
-# Function to convert numeric columns
-clean_numeric <- function(column) {
-  as.numeric(gsub("[^0-9.-]", "", column))
-}
-
-# Ensure columns exist before applying transformations
+# Clean the specific columns by removing any non-numeric characters except for dots and replacing commas with dots
 data <- data %>%
-  mutate(
-    Market_Volume_2022 = clean_numeric(MarketVolume2022),
-    Market_Volume_2023 = clean_numeric(MarketVolume2023),
-    Market_Value_USD_2022 = clean_numeric(MarketValueDollar2022),
-    Market_Value_USD_2023 = clean_numeric(MarketValueDollar2023)
-  )
+  mutate(across(c(Market_Volume_2022, Market_Volume_2023, Market_Value_USD_2022, Market_Value_USD_2023), 
+                ~ gsub("[^0-9.,]", "", .))) %>%
+  mutate(across(c(Market_Volume_2022, Market_Volume_2023, Market_Value_USD_2022, Market_Value_USD_2023), 
+                ~ gsub(",", ".", .)))
 
-# Handling missing values by removing rows with NA in key columns
+# Convert columns to numeric and handle any non-numeric values
 data <- data %>%
-  drop_na(Market_Volume_2022, Market_Volume_2023, Market_Value_USD_2022, Market_Value_USD_2023)
+  mutate(across(c(Market_Volume_2022, Market_Volume_2023, Market_Value_USD_2022, Market_Value_USD_2023), 
+                ~ as.numeric(.))) 
 
-# Descriptive Statistics
-summary_stats <- data %>%
-  summarise(across(c(Market_Volume_2022, Market_Volume_2023, Market_Value_USD_2022, Market_Value_USD_2023), 
-                   list(mean = mean, median = median, sd = sd), na.rm = TRUE))
+# Inspect the data after conversion
+print("Estructura de los datos después de la conversión:")
+print(str(data))
 
-print(summary_stats)
+# Identify rows with NA values in the specific columns after conversion
+na_rows <- data %>%
+  filter(is.na(Market_Volume_2022) | is.na(Market_Volume_2023) | is.na(Market_Value_USD_2022) | is.na(Market_Value_USD_2023))
 
-# Visualization of distributions
-ggplot(data, aes(x = Market_Volume_2022)) +
-  geom_histogram(binwidth = 10, fill = "blue", alpha = 0.7) +
-  ggtitle("Distribution of Market Volume 2022") +
-  xlab("Market Volume 2022") + ylab("Frequency")
+print("Filas con valores NA después de la conversión a numérico:")
+print(na_rows)
 
-ggplot(data, aes(x = Market_Value_USD_2022)) +
-  geom_histogram(binwidth = 500, fill = "green", alpha = 0.7) +
-  ggtitle("Distribution of Market Value (USD) 2022") +
-  xlab("Market Value (USD) 2022") + ylab("Frequency")
-
-# Year-over-Year Comparison
+# Remove rows with any NA values in the specific columns
 data <- data %>%
-  mutate(Volume_Change = Market_Volume_2023 - Market_Volume_2022,
-         Value_Change = Market_Value_USD_2023 - Market_Value_USD_2022)
+  filter(!is.na(Market_Volume_2022) & !is.na(Market_Volume_2023) & !is.na(Market_Value_USD_2022) & !is.na(Market_Value_USD_2023))
 
-year_over_year_summary <- data %>%
-  summarise(across(c(Volume_Change, Value_Change), list(mean = mean, median = median, sd = sd), na.rm = TRUE))
+# Save the cleaned data to a new CSV file
+write_csv(data, "C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/cleaned_agricultural_data.csv")
 
-print(year_over_year_summary)
+# Summary statistics
+summary_statistics <- summary(data)
 
-# Top Performing Crops and Products
-top_crops <- data %>%
-  group_by(Crop) %>%
-  summarise(Total_Value_2023 = sum(Market_Value_USD_2023, na.rm = TRUE)) %>%
-  arrange(desc(Total_Value_2023)) %>%
-  head(10)
+# Correlation matrix
+correlation_matrix <- cor(data %>% select(Market_Volume_2022, Market_Volume_2023, Market_Value_USD_2022, Market_Value_USD_2023))
 
-print(top_crops)
+# Plotting relevant data with simple design and white background
+# Scatter plot for Market Volume vs. Market Value
+p1 <- ggplot(data, aes(x = Market_Volume_2022, y = Market_Value_USD_2022)) +
+  geom_point() +
+  labs(title = "Volumen de Mercado 2022 vs Valor de Mercado USD 2022",
+       x = "Volumen de Mercado 2022",
+       y = "Valor de Mercado USD 2022") +
+  theme_minimal()
 
-# Regional Insights
-regional_insights <- data %>%
-  group_by(CountryGroup) %>%
-  summarise(Total_Value_2023 = sum(Market_Value_USD_2023, na.rm = TRUE),
-            Total_Volume_2023 = sum(Market_Volume_2023, na.rm = TRUE))
+p2 <- ggplot(data, aes(x = Market_Volume_2023, y = Market_Value_USD_2023)) +
+  geom_point() +
+  labs(title = "Volumen de Mercado 2023 vs Valor de Mercado USD 2023",
+       x = "Volumen de Mercado 2023",
+       y = "Valor de Mercado USD 2023") +
+  theme_minimal()
 
-print(regional_insights)
+# Simple boxplots with white background
+p3 <- ggplot(data, aes(x = "", y = Market_Volume_2022)) +
+  geom_boxplot() +
+  labs(title = "Caja y Bigotes del Volumen de Mercado 2022",
+       y = "Volumen de Mercado 2022") +
+  theme_minimal() +
+  theme(panel.background = element_rect(fill = "white"))
 
-# Product Line Trends
-product_line_trends <- data %>%
-  group_by(ProductLine) %>%
-  summarise(Total_Value_2023 = sum(Market_Value_USD_2023, na.rm = TRUE),
-            Total_Volume_2023 = sum(Market_Volume_2023, na.rm = TRUE))
+p4 <- ggplot(data, aes(x = "", y = Market_Volume_2023)) +
+  geom_boxplot() +
+  labs(title = "Caja y Bigotes del Volumen de Mercado 2023",
+       y = "Volumen de Mercado 2023") +
+  theme_minimal() +
+  theme(panel.background = element_rect(fill = "white"))
 
-print(product_line_trends)
+p5 <- ggplot(data, aes(x = "", y = Market_Value_USD_2022)) +
+  geom_boxplot() +
+  labs(title = "Caja y Bigotes del Valor de Mercado USD 2022",
+       y = "Valor de Mercado USD 2022") +
+  theme_minimal() +
+  theme(panel.background = element_rect(fill = "white"))
 
-# Common Name Impact
-common_name_impact <- data %>%
-  group_by(Commonname) %>%
-  summarise(Total_Value_2023 = sum(Market_Value_USD_2023, na.rm = TRUE),
-            Total_Volume_2023 = sum(Market_Volume_2023, na.rm = TRUE))
+p6 <- ggplot(data, aes(x = "", y = Market_Value_USD_2023)) +
+  geom_boxplot() +
+  labs(title = "Caja y Bigotes del Valor de Mercado USD 2023",
+       y = "Valor de Mercado USD 2023") +
+  theme_minimal() +
+  theme(panel.background = element_rect(fill = "white"))
 
-print(common_name_impact)
+# Histograms corresponding to each boxplot
+h1 <- ggplot(data, aes(x = Market_Volume_2022)) +
+  geom_histogram(binwidth = 1, fill = "blue", color = "black") +
+  labs(title = "Histograma del Volumen de Mercado 2022",
+       x = "Volumen de Mercado 2022",
+       y = "Frecuencia") +
+  theme_minimal()
 
-# Strategic Crop Analysis
-strategic_crop_analysis <- data %>%
-  group_by(StrategicCrop) %>%
-  summarise(Total_Value_2023 = sum(Market_Value_USD_2023, na.rm = TRUE),
-            Total_Volume_2023 = sum(Market_Volume_2023, na.rm = TRUE))
+h2 <- ggplot(data, aes(x = Market_Volume_2023)) +
+  geom_histogram(binwidth = 1, fill = "blue", color = "black") +
+  labs(title = "Histograma del Volumen de Mercado 2023",
+       x = "Volumen de Mercado 2023",
+       y = "Frecuencia") +
+  theme_minimal()
 
-print(strategic_crop_analysis)
+h3 <- ggplot(data, aes(x = Market_Value_USD_2022)) +
+  geom_histogram(binwidth = 1, fill = "blue", color = "black") +
+  labs(title = "Histograma del Valor de Mercado USD 2022",
+       x = "Valor de Mercado USD 2022",
+       y = "Frecuencia") +
+  theme_minimal()
 
-# Visualizations for top performing crops and products
-ggplot(top_crops, aes(x = reorder(Crop, Total_Value_2023), y = Total_Value_2023)) +
-  geom_bar(stat = "identity", fill = "purple", alpha = 0.7) +
-  coord_flip() +
-  ggtitle("Top Performing Crops in 2023") +
-  xlab("Crop") + ylab("Total Market Value (USD) 2023")
+h4 <- ggplot(data, aes(x = Market_Value_USD_2023)) +
+  geom_histogram(binwidth = 1, fill = "blue", color = "black") +
+  labs(title = "Histograma del Valor de Mercado USD 2023",
+       x = "Valor de Mercado USD 2023",
+       y = "Frecuencia") +
+  theme_minimal()
 
-# Save the summary statistics and other results to CSV files
-write.csv(summary_stats, "C:/Users/salva/Documents/FinalProjectStatisticMasterDegree/summary_stats.csv")
-write.csv(year_over_year_summary, "C:/Users/salva/Documents/FinalProjectStatisticMasterDegree/year_over_year_summary.csv")
-write.csv(top_crops, "C:/Users/salva/Documents/FinalProjectStatisticMasterDegree/top_crops.csv")
-write.csv(regional_insights, "C:/Users/salva/Documents/FinalProjectStatisticMasterDegree/regional_insights.csv")
-write.csv(product_line_trends, "C:/Users/salva/Documents/FinalProjectStatisticMasterDegree/product_line_trends.csv")
-write.csv(common_name_impact, "C:/Users/salva/Documents/FinalProjectStatisticMasterDegree/common_name_impact.csv")
-write.csv(strategic_crop_analysis, "C:/Users/salva/Documents/FinalProjectStatisticMasterDegree/strategic_crop_analysis.csv")
+# Save the plots
+ggsave("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/scatter_plot_2022.png", p1)
+ggsave("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/scatter_plot_2023.png", p2)
+ggsave("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/boxplot_volume_2022.png", p3)
+ggsave("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/boxplot_volume_2023.png", p4)
+ggsave("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/boxplot_value_2022.png", p5)
+ggsave("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/boxplot_value_2023.png", p6)
+
+ggsave("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/histogram_volume_2022.png", h1)
+ggsave("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/histogram_volume_2023.png", h2)
+ggsave("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/histogram_value_2022.png", h3)
+ggsave("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/histogram_value_2023.png", h4)
+
+# Print the summary statistics and correlation matrix
+print(summary_statistics)
+print(correlation_matrix)
+
+# Save the summary statistics and correlation matrix to a text file
+sink("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/analysis_results.txt")
+print("Estadísticas Resumidas:")
+print(summary_statistics)
+print("Matriz de Correlación:")
+print(correlation_matrix)
+sink()
