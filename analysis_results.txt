@@ -1,33 +1,21 @@
 [1] "Estadísticas Resumidas:"
- BusinessDivision   CountryGroup       PlanningEntity     StrategicCrop          Crop          
- Length:12051       Length:12051       Length:12051       Length:12051       Length:12051      
- Class :character   Class :character   Class :character   Class :character   Class :character  
- Mode  :character   Mode  :character   Mode  :character   Mode  :character   Mode  :character  
-                                                                                               
-                                                                                               
-                                                                                               
- ProductLine         Commonname        LocalProductName   Market_Volume_2022 Market_Volume_2023
- Length:12051       Length:12051       Length:12051       Min.   :  0.000    Min.   :  0.000   
- Class :character   Class :character   Class :character   1st Qu.:  0.170    1st Qu.:  0.200   
- Mode  :character   Mode  :character   Mode  :character   Median :  1.150    Median :  1.130   
-                                                          Mean   :  9.639    Mean   :  9.618   
-                                                          3rd Qu.:  5.950    3rd Qu.:  5.915   
-                                                          Max.   :930.760    Max.   :750.460   
- Market_Value_USD_2022 Market_Value_USD_2023
- Min.   :  0.00        Min.   :  0.000      
- 1st Qu.:  3.56        1st Qu.:  3.485      
- Median : 19.20        Median : 19.100      
- Mean   : 94.19        Mean   : 90.486      
- 3rd Qu.: 96.05        3rd Qu.: 92.610      
- Max.   :999.90        Max.   :996.510      
+ BusinessDivision   CountryGroup       PlanningEntity     StrategicCrop          Crop           ProductLine       
+ Length:12051       Length:12051       Length:12051       Length:12051       Length:12051       Length:12051      
+ Class :character   Class :character   Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                                                                  
+                                                                                                                  
+                                                                                                                  
+  Commonname        LocalProductName   Market_Volume_2022 Market_Volume_2023 Market_Value_USD_2022 Market_Value_USD_2023
+ Length:12051       Length:12051       Min.   :  0.000    Min.   :  0.000    Min.   :  0.00        Min.   :  0.000      
+ Class :character   Class :character   1st Qu.:  0.170    1st Qu.:  0.200    1st Qu.:  3.56        1st Qu.:  3.485      
+ Mode  :character   Mode  :character   Median :  1.150    Median :  1.130    Median : 19.20        Median : 19.100      
+                                       Mean   :  9.639    Mean   :  9.618    Mean   : 94.19        Mean   : 90.486      
+                                       3rd Qu.:  5.950    3rd Qu.:  5.915    3rd Qu.: 96.05        3rd Qu.: 92.610      
+                                       Max.   :930.760    Max.   :750.460    Max.   :999.90        Max.   :996.510      
 [1] "Matriz de Correlación:"
-                      Market_Volume_2022 Market_Volume_2023 Market_Value_USD_2022
-Market_Volume_2022             1.0000000          0.9455943             0.5817510
-Market_Volume_2023             0.9455943          1.0000000             0.5722015
-Market_Value_USD_2022          0.5817510          0.5722015             1.0000000
-Market_Value_USD_2023          0.4930061          0.4898819             0.8569297
-                      Market_Value_USD_2023
-Market_Volume_2022                0.4930061
-Market_Volume_2023                0.4898819
-Market_Value_USD_2022             0.8569297
-Market_Value_USD_2023             1.0000000
+                      Market_Volume_2022 Market_Volume_2023 Market_Value_USD_2022 Market_Value_USD_2023
+Market_Volume_2022             1.0000000          0.9455943             0.5817510             0.4930061
+Market_Volume_2023             0.9455943          1.0000000             0.5722015             0.4898819
+Market_Value_USD_2022          0.5817510          0.5722015             1.0000000             0.8569297
+Market_Value_USD_2023          0.4930061          0.4898819             0.8569297             1.0000000

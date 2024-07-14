@@ -1,12 +1,11 @@
 # Load necessary libraries
 ##C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/agricultural_data.csv
-# Load necessary libraries
 library(dplyr)
 library(ggplot2)
 library(readr)
 
 # Load the data
-data <- read.csv("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/agricultural_data.csv", sep = ";")
+data <- read.csv("C:/Users/salva/Documents/FinalProjectStatisticMasterDegree/agricultural_data.csv", sep = ";")
 
 # Inspect the data structure
 print("Estructura de los datos:")
@@ -40,7 +39,7 @@ data <- data %>%
   filter(!is.na(Market_Volume_2022) & !is.na(Market_Volume_2023) & !is.na(Market_Value_USD_2022) & !is.na(Market_Value_USD_2023))
 
 # Save the cleaned data to a new CSV file
-write_csv(data, "C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/cleaned_agricultural_data.csv")
+write_csv(data, "C:/Users/salva/Documents/FinalProjectStatisticMasterDegree/cleaned_agricultural_data.csv")
 
 # Summary statistics
 summary_statistics <- summary(data)
@@ -93,54 +92,54 @@ p6 <- ggplot(data, aes(x = "", y = Market_Value_USD_2023)) +
   theme_minimal() +
   theme(panel.background = element_rect(fill = "white"))
 
-# Histograms corresponding to each boxplot
+# Histograms corresponding to each boxplot with white bars and black edges
 h1 <- ggplot(data, aes(x = Market_Volume_2022)) +
-  geom_histogram(binwidth = 1, fill = "blue", color = "black") +
+  geom_histogram(binwidth = 1, fill = "white", color = "black") +
   labs(title = "Histograma del Volumen de Mercado 2022",
        x = "Volumen de Mercado 2022",
        y = "Frecuencia") +
   theme_minimal()
 
 h2 <- ggplot(data, aes(x = Market_Volume_2023)) +
-  geom_histogram(binwidth = 1, fill = "blue", color = "black") +
+  geom_histogram(binwidth = 1, fill = "white", color = "black") +
   labs(title = "Histograma del Volumen de Mercado 2023",
        x = "Volumen de Mercado 2023",
        y = "Frecuencia") +
   theme_minimal()
 
 h3 <- ggplot(data, aes(x = Market_Value_USD_2022)) +
-  geom_histogram(binwidth = 1, fill = "blue", color = "black") +
+  geom_histogram(binwidth = 1, fill = "white", color = "black") +
   labs(title = "Histograma del Valor de Mercado USD 2022",
        x = "Valor de Mercado USD 2022",
        y = "Frecuencia") +
   theme_minimal()
 
 h4 <- ggplot(data, aes(x = Market_Value_USD_2023)) +
-  geom_histogram(binwidth = 1, fill = "blue", color = "black") +
+  geom_histogram(binwidth = 1, fill = "white", color = "black") +
   labs(title = "Histograma del Valor de Mercado USD 2023",
        x = "Valor de Mercado USD 2023",
        y = "Frecuencia") +
   theme_minimal()
 
 # Save the plots
-ggsave("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/scatter_plot_2022.png", p1)
-ggsave("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/scatter_plot_2023.png", p2)
-ggsave("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/boxplot_volume_2022.png", p3)
-ggsave("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/boxplot_volume_2023.png", p4)
-ggsave("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/boxplot_value_2022.png", p5)
-ggsave("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/boxplot_value_2023.png", p6)
+ggsave("C:/Users/salva/Documents/FinalProjectStatisticMasterDegree/scatter_plot_2022.png", p1)
+ggsave("C:/Users/salva/Documents/FinalProjectStatisticMasterDegree/scatter_plot_2023.png", p2)
+ggsave("C:/Users/salva/Documents/FinalProjectStatisticMasterDegree/boxplot_volume_2022.png", p3)
+ggsave("C:/Users/salva/Documents/FinalProjectStatisticMasterDegree/boxplot_volume_2023.png", p4)
+ggsave("C:/Users/salva/Documents/FinalProjectStatisticMasterDegree/boxplot_value_2022.png", p5)
+ggsave("C:/Users/salva/Documents/FinalProjectStatisticMasterDegree/boxplot_value_2023.png", p6)
 
-ggsave("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/histogram_volume_2022.png", h1)
-ggsave("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/histogram_volume_2023.png", h2)
-ggsave("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/histogram_value_2022.png", h3)
-ggsave("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/histogram_value_2023.png", h4)
+ggsave("C:/Users/salva/Documents/FinalProjectStatisticMasterDegree/histogram_volume_2022.png", h1)
+ggsave("C:/Users/salva/Documents/FinalProjectStatisticMasterDegree/histogram_volume_2023.png", h2)
+ggsave("C:/Users/salva/Documents/FinalProjectStatisticMasterDegree/histogram_value_2022.png", h3)
+ggsave("C:/Users/salva/Documents/FinalProjectStatisticMasterDegree/histogram_value_2023.png", h4)
 
 # Print the summary statistics and correlation matrix
 print(summary_statistics)
 print(correlation_matrix)
 
 # Save the summary statistics and correlation matrix to a text file
-sink("C:/Users/SERHernandez/Documents/PsycologicWellBeing/FinalProjectStatisticMasterDegree/analysis_results.txt")
+sink("C:/Users/salva/Documents/FinalProjectStatisticMasterDegree/analysis_results.txt")
 print("Estadísticas Resumidas:")
 print(summary_statistics)
 print("Matriz de Correlación:")
